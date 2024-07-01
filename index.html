@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialStackPro Reviews</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>SocialStackPro Reviews</h1>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#submit-review">Submit Review</a>
+            <a href="#reviews">Reviews</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>Share Your Experience with SocialStackPro</h1>
+            <p>We value your feedback and would love to hear about your experience with our training sessions. Your reviews help us improve and inspire others.</p>
+            <button onclick="document.getElementById('submit-review').scrollIntoView({ behavior: 'smooth' });">Submit Your Review</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="section" id="about">
+            <h2>About SocialStackPro</h2>
+            <p>SocialStackPro is a leading tool in social media management, empowering real estate professionals with AI-driven content creation and organization. Our workshops help agents enhance their strategies and stay ahead of the curve.</p>
+            <ul>
+                <li>AI-powered content creation</li>
+                <li>Organize and schedule posts easily</li>
+                <li>Customizable social media campaigns</li>
+                <li>Real-time insights and analytics</li>
+            </ul>
+        </div>
+
+        <div class="section" id="submit-review">
+            <h2>Submit Your Review</h2>
+            <form name="review" method="POST" data-netlify="true">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="course">Course Taken:</label>
+                    <input type="text" id="course" name="course" required>
+                </div>
+                <div class="form-group">
+                    <label for="rating">Rating:</label>
+                    <div class="rating">
+                        <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
+                        <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
+                        <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
+                        <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
+                        <input type="radio" name="rating" id="star1" value="1"><label for="star1">★</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="comments">Comments:</label>
+                    <textarea id="comments" name="comments" rows="4" required></textarea>
+                </div>
+                <button type="submit">Submit Review</button>
+            </form>
+        </div>
+
+        <div class="section" id="reviews">
+            <h2>What Our Students Are Saying</h2>
+            <div class="testimonial">
+                <div class="star-rating">★★★★★</div>
+                <p>"SocialStackPro has transformed my social media strategy! The AI tools are incredible." - Jane Doe</p>
+            </div>
+            <div class="testimonial">
+                <div class="star-rating">★★★★☆</div>
+                <p>"The workshops are very informative and hands-on. Highly recommend!" - John Smith</p>
+            </div>
+        </div>
+    </div>
+
+    <footer id="contact">
+        <p>For more information, visit our main site at <a href="https://www.socialstackpro.com" target="_blank">SocialStackPro</a>.</p>
+        <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        <p>SocialStackPro Inc., 14101 Panama City Beach Pkwy, Panama City Beach, FL 32413, United States.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
