@@ -39,7 +39,8 @@
 
         <div class="section" id="submit-review">
             <h2>Submit Your Review</h2>
-            <form name="review" method="POST" data-netlify="true">
+            <form id="reviewForm" method="POST" action="/.netlify/functions/save-review">
+                <input type="hidden" name="form-name" value="review">
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" required>
@@ -72,14 +73,7 @@
 
         <div class="section" id="reviews">
             <h2>What Our Students Are Saying</h2>
-            <div class="testimonial">
-                <div class="star-rating">★★★★★</div>
-                <p>"SocialStackPro has transformed my social media strategy! The AI tools are incredible." - Jane Doe</p>
-            </div>
-            <div class="testimonial">
-                <div class="star-rating">★★★★☆</div>
-                <p>"The workshops are very informative and hands-on. Highly recommend!" - John Smith</p>
-            </div>
+            <div id="reviews-container"></div>
         </div>
     </div>
 
@@ -90,5 +84,52 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script>
+        document.getElementById('reviewForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {};
+
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            const response = await fetch('/.netlify/functions/save-review', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                window.location.href = '/success';
+            } else {
+                alert('There was a problem with your submission.');
+            }
+        });
+
+        async function fetchReviews() {
+            const response = await fetch('/.netlify/functions/get-reviews');
+            const reviews = await response.json();
+
+            const container = document.getElementById('reviews-container');
+            container.innerHTML = '';
+
+            reviews.forEach(review => {
+                const reviewElement = document.createElement('div');
+                reviewElement.className = 'testimonial';
+
+                const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+
+                reviewElement.innerHTML = `
+                    <div class="star-rating">${stars}</div>
+                    <p>"${review.comments}" - ${review.name}</p>
+                `;
+
+                container.appendChild(reviewElement);
+            });
+        }
+
+        fetchReviews();
+    </script>
 </body>
 </html>
