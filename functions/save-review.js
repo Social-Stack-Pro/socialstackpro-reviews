@@ -1,27 +1,36 @@
-const fs = require('fs');
-const path = require('path');
+const AWS = require('aws-sdk');
+AWS.config.update({
+    accessKeyId: process.env.SSPReviews_AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.SSPReviews_AWS_SECRET_ACCESS_KEY
+});
+const s3 = new AWS.S3();
+const BUCKET_NAME = process.env.SSPReviews_BUCKET_NAME;
 
 exports.handler = async (event) => {
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: 'Method Not Allowed' };
+    try {
+        if (event.httpMethod !== 'POST') {
+            return { statusCode: 405, body: 'Method Not Allowed' };
+        }
+
+        const data = JSON.parse(event.body);
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key: 'reviews.json',
+            Body: JSON.stringify(data),
+            ContentType: 'application/json'
+        };
+
+        await s3.putObject(params).promise();
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Review saved' })
+        };
+    } catch (error) {
+        console.error('Error saving review:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ message: 'Internal Server Error' })
+        };
     }
-
-    const data = JSON.parse(event.body);
-    const filePath = path.join(__dirname, 'reviews.json');
-
-    let reviews = [];
-
-    if (fs.existsSync(filePath)) {
-        const fileData = fs.readFileSync(filePath, 'utf-8');
-        reviews = JSON.parse(fileData);
-    }
-
-    reviews.push(data);
-
-    fs.writeFileSync(filePath, JSON.stringify(reviews, null, 2));
-
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'Review saved' })
-    };
 };
