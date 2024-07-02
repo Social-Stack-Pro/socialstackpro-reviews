@@ -1,15 +1,13 @@
 const AWS = require('aws-sdk');
-AWS.config.update({
+
+const s3 = new AWS.S3({
     accessKeyId: process.env.SSPReviews_AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.SSPReviews_AWS_SECRET_ACCESS_KEY,
     region: 'us-east-1'
 });
 
-const s3 = new AWS.S3();
-
 exports.handler = async (event) => {
-    const { name, email, course, rating, comments } = JSON.parse(event.body);
-    const review = { name, email, course, rating, comments };
+    console.log('Received event:', JSON.stringify(event, null, 2));
 
     const params = {
         Bucket: process.env.SSPReviews_BUCKET_NAME,
@@ -17,43 +15,22 @@ exports.handler = async (event) => {
     };
 
     try {
+        console.log('Fetching reviews with params:', params);
         const data = await s3.getObject(params).promise();
-        const reviews = JSON.parse(data.Body.toString());
-        reviews.push(review);
+        const reviews = JSON.parse(data.Body.toString('utf-8'));
+        console.log('Raw data fetched:', data);
+        console.log('Parsed reviews:', reviews);
 
-        const updatedParams = {
-            Bucket: process.env.SSPReviews_BUCKET_NAME,
-            Key: 'reviews.json',
-            Body: JSON.stringify(reviews),
-            ContentType: 'application/json'
-        };
-
-        await s3.putObject(updatedParams).promise();
-
+        // Ensure reviews is an array
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Review saved successfully' })
+            body: JSON.stringify(Array.isArray(reviews) ? reviews : [reviews])
         };
     } catch (error) {
-        if (error.code === 'NoSuchKey') {
-            const initialParams = {
-                Bucket: process.env.SSPReviews_BUCKET_NAME,
-                Key: 'reviews.json',
-                Body: JSON.stringify([review]),
-                ContentType: 'application/json'
-            };
-
-            await s3.putObject(initialParams).promise();
-
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ message: 'Review saved successfully' })
-            };
-        } else {
-            return {
-                statusCode: 500,
-                body: JSON.stringify({ error: 'Could not save review' })
-            };
-        }
+        console.error('Error fetching reviews:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Failed to fetch reviews' })
+        };
     }
 };
