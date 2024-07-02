@@ -17,8 +17,13 @@ exports.handler = async (event) => {
         };
 
         const data = await s3.getObject(params).promise();
-        const reviews = JSON.parse(data.Body.toString('utf-8'));
+        let reviews = JSON.parse(data.Body.toString('utf-8'));
         console.log('Current reviews:', reviews);
+
+        // Ensure reviews is an array
+        if (!Array.isArray(reviews)) {
+            reviews = [reviews];
+        }
 
         reviews.push(review);
 
