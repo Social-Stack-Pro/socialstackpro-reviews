@@ -1,37 +1,11 @@
-document.getElementById('reviewForm').addEventListener('submit', async function (event) {
-    event.preventDefault();
-
-    const formData = new FormData(this);
-    const data = {};
-
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
-
-    try {
-        const response = await fetch('/.netlify/functions/save-review', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-
-        if (response.ok) {
-            window.location.href = '/success';
-        } else {
-            alert('There was a problem with your submission.');
-        }
-    } catch (error) {
-        console.error('Error submitting review:', error);
-        alert('There was a problem with your submission.');
-    }
-});
-
 async function fetchReviews() {
     try {
         const response = await fetch('/.netlify/functions/get-reviews');
         const reviews = await response.json();
+
+        if (!Array.isArray(reviews)) {
+            throw new Error('Expected an array of reviews');
+        }
 
         const container = document.getElementById('reviews-container');
         container.innerHTML = '';
