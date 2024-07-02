@@ -1,6 +1,10 @@
 async function fetchReviews() {
     try {
         const response = await fetch('/.netlify/functions/get-reviews');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
         const reviews = await response.json();
 
         const container = document.getElementById('reviews-container');
