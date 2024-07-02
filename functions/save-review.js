@@ -1,59 +1,46 @@
 const AWS = require('aws-sdk');
-AWS.config.update({
+
+const s3 = new AWS.S3({
     accessKeyId: process.env.SSPReviews_AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.SSPReviews_AWS_SECRET_ACCESS_KEY,
     region: 'us-east-1'
 });
 
-const s3 = new AWS.S3();
-
 exports.handler = async (event) => {
-    const { name, email, course, rating, comments } = JSON.parse(event.body);
-    const review = { name, email, course, rating, comments };
-
-    const params = {
-        Bucket: process.env.SSPReviews_BUCKET_NAME,
-        Key: 'reviews.json'
-    };
-
     try {
+        const review = JSON.parse(event.body);
+        console.log('Received review:', review);
+
+        const params = {
+            Bucket: process.env.SSPReviews_BUCKET_NAME,
+            Key: 'reviews.json'
+        };
+
         const data = await s3.getObject(params).promise();
-        const reviews = JSON.parse(data.Body.toString());
+        const reviews = JSON.parse(data.Body.toString('utf-8'));
+        console.log('Current reviews:', reviews);
+
         reviews.push(review);
 
-        const updatedParams = {
+        const putParams = {
             Bucket: process.env.SSPReviews_BUCKET_NAME,
             Key: 'reviews.json',
             Body: JSON.stringify(reviews),
             ContentType: 'application/json'
         };
 
-        await s3.putObject(updatedParams).promise();
+        await s3.putObject(putParams).promise();
+        console.log('Review saved successfully');
 
         return {
             statusCode: 200,
             body: JSON.stringify({ message: 'Review saved successfully' })
         };
     } catch (error) {
-        if (error.code === 'NoSuchKey') {
-            const initialParams = {
-                Bucket: process.env.SSPReviews_BUCKET_NAME,
-                Key: 'reviews.json',
-                Body: JSON.stringify([review]),
-                ContentType: 'application/json'
-            };
-
-            await s3.putObject(initialParams).promise();
-
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ message: 'Review saved successfully' })
-            };
-        } else {
-            return {
-                statusCode: 500,
-                body: JSON.stringify({ error: 'Could not save review' })
-            };
-        }
+        console.error('Error saving review:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Failed to save review', details: error.message })
+        };
     }
 };
