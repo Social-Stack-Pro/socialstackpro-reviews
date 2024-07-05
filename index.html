@@ -4,24 +4,230 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SocialStackPro Reviews</title>
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f39c12;
+            --text-color: #333;
+            --background-color: #f5f5f5;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--secondary-color);
+        }
+
+        .hero {
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 12px 24px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #e67e22;
+        }
+
+        .section {
+            background-color: var(--white);
+            margin: 2rem 0;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .rating > input {
+            display: none;
+        }
+
+        .rating > label {
+            position: relative;
+            width: 1.1em;
+            font-size: 2rem;
+            color: #FFD700;
+            cursor: pointer;
+        }
+
+        .rating > label::before {
+            content: "\2605";
+            position: absolute;
+            opacity: 0;
+        }
+
+        .rating > label:hover:before,
+        .rating > label:hover ~ label:before {
+            opacity: 1 !important;
+        }
+
+        .rating > input:checked ~ label:before {
+            opacity: 1;
+        }
+
+        #reviews-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .testimonial {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+            }
+
+            nav {
+                margin-top: 1rem;
+            }
+
+            nav a {
+                margin: 0 10px;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>SocialStackPro Reviews</h1>
-        <nav>
-            <a href="#about">About</a>
-            <a href="#submit-review">Submit Review</a>
-            <a href="#reviews">Reviews</a>
-            <a href="#contact">Contact</a>
-        </nav>
+        <div class="container">
+            <h1>SocialStackPro Reviews</h1>
+            <nav>
+                <a href="#about">About</a>
+                <a href="#submit-review">Submit Review</a>
+                <a href="#reviews">Reviews</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
     </header>
 
     <div class="hero">
         <div class="container">
             <h1>Share Your Experience with SocialStackPro</h1>
             <p>We value your feedback and would love to hear about your experience with our training sessions. Your reviews help us improve and inspire others.</p>
-            <button onclick="document.getElementById('submit-review').scrollIntoView({ behavior: 'smooth' });">Submit Your Review</button>
+            <a href="#submit-review" class="cta-button">Submit Your Review</a>
         </div>
     </div>
 
@@ -35,7 +241,7 @@
                 <li>Customizable social media campaigns</li>
                 <li>Real-time insights and analytics</li>
             </ul>
-            <img src="images/S_logo_white_circle_200x200.png" alt="SocialStackPro Logo" />
+            <img src="images/S_logo_white_circle_200x200.png" alt="SocialStackPro Logo" style="max-width: 200px; display: block; margin: 20px auto;" />
         </div>
 
         <div class="section" id="submit-review">
@@ -68,7 +274,7 @@
                     <label for="comments">Comments:</label>
                     <textarea id="comments" name="comments" rows="4" required></textarea>
                 </div>
-                <button type="submit">Submit Review</button>
+                <button type="submit" class="cta-button">Submit Review</button>
             </form>
         </div>
 
@@ -79,9 +285,11 @@
     </div>
 
     <footer id="contact">
-        <p>For more information, visit our main site at <a href="https://www.socialstackpro.com" target="_blank">SocialStackPro</a>.</p>
-        <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
-        <p>SocialStackPro Inc., 14101 Panama City Beach Pkwy, Panama City Beach, FL 32413, United States.</p>
+        <div class="container">
+            <p>For more information, visit our main site at <a href="https://www.socialstackpro.com" target="_blank">SocialStackPro</a>.</p>
+            <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            <p>SocialStackPro Inc., 14101 Panama City Beach Pkwy, Panama City Beach, FL 32413, United States.</p>
+        </div>
     </footer>
 
     <script src="js/main.js"></script>
@@ -123,7 +331,8 @@
 
                 reviewElement.innerHTML = `
                     <div class="star-rating">${stars}</div>
-                    <p>"${review.comments}" - ${review.name}</p>
+                    <p>"${review.comments}"</p>
+                    <p><strong>${review.name}</strong></p>
                 `;
 
                 container.appendChild(reviewElement);
